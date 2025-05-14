@@ -34,15 +34,14 @@ export const config = {
           },
         },
       ] as RtpCodecCapability[],
-      //   webrtctrasport settings
-      webRtcTransport: {
-        listenIps: [
-          { ip: "0.0.0.0", announcedIp: undefined },
-        ] as TransportListenInfo[],
-        enableUdp: true,
-        enableTcp: true,
-        preferUdp: true,
-      },
+    },
+    //   webrtctrasport settings
+    webRtcTransport: {
+      listenIps: [
+        { ip: "0.0.0.0", announcedIp: undefined },
+      ] as TransportListenInfo[],
+      maxIncomeBitrate: 1500000,
+      initialAvailableOutgoingBitrate: 1000000
     },
   },
 } as const;
