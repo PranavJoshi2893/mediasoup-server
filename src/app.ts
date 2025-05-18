@@ -11,7 +11,7 @@ export async function main() {
 
   webSocketConnection(websocket);
 
-  const PORT = 3000;
+  const PORT = 3001;
   const HOST = "localhost";
 
   server.listen(PORT, HOST, () => {

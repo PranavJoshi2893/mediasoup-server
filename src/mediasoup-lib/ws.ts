@@ -5,6 +5,7 @@ import { Router, Producer, Transport } from "mediasoup/node/lib/types";
 
 let mediasoupRouter: Router;
 let producerTransport: Transport;
+let consumerTransport: Transport;
 let producer: Producer
 
 async function webSocketConnection(websock: WebSocket.Server) {
@@ -35,7 +36,13 @@ async function webSocketConnection(websock: WebSocket.Server) {
           break;
         case "produce":
           onProduce(event, ws, websock)
-          break
+          break;
+        case "createConsumerTransport":
+          onCreateConsumerTransport(event, ws)
+          break;
+        case "connectConsumerTransport":
+          onConnectConsumerTransport(event, ws)
+          break;
         default:
           break;
       }
@@ -71,6 +78,23 @@ async function webSocketConnection(websock: WebSocket.Server) {
       send(ws, "error", err)
     }
   }
+
+  async function onCreateConsumerTransport(event: string, ws: WebSocket) {
+    try {
+      const { transport, params } = await createWebRtcTransport(mediasoupRouter)
+      consumerTransport = transport;
+      send(ws, "subTransportCreated", params)
+    } catch (err) {
+      console.error(err)
+      send(ws, "error", err)
+    }
+  }
+
+  async function onConnectConsumerTransport(event: any, ws: WebSocket) {
+    await consumerTransport.connect({ dtlsParameters: event.dtlsParameters })
+    send(ws, "subConnected", 'consumer connected')
+  }
+
 
   function IsJsonString(str: string) {
     try {
